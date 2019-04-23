@@ -16,9 +16,14 @@ async.waterfall([
     });
   },
   (city, callback) => {
-    console.log(`The user entered: ${city}`);
-    callback();
+    const url = WEATHER_API_URL + city + '&APPID=' + WEATHER_API_KEY +
+        '&units=imperial';
+    request(url, (err, resp, body) => {
+      if (err) return callback(err);
+      callback(null, city, body);
+    });
   }
-], (err, results) => {
-  console.log("Here we'll output the result.");
+], (err, city, weather) => {
+  if (err) console.error(err);
+  console.log(`The weather in ${city} \n ${weather}`);
 });
